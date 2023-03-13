@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=visualization"></script>
+
+    <title>Chicago Map</title>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script>
+      var map, directionsService, directionsRenderer;
+
+      function initMap() {
+        var chicago = { lat: 41.8781, lng: -87.6298 };
+        map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 14,
+          center: chicago,
+        });
+        var crimeLocation = { lat: 41.8915, lng: -87.6113 };
+        var heatmapData = [
+          { location: new google.maps.LatLng(crimeLocation.lat, crimeLocation.lng), weight: 4 },
+        ];
+        var heatmap = new google.maps.visualization.HeatmapLayer({
+          data: heatmapData,
+          map: map,
+        });
+        directionsService = new google.maps.DirectionsService();
+        directionsRenderer = new google.maps.DirectionsRenderer({
+          map: map,
+        });
+      }
+      
+      function calcRoute() {
+        var start = document.getElementById("start").value;
+        var end = document.getElementById("end").value;
+        var request = {
+          origin: start,
+          destination: end,
+          travelMode: google.maps.TravelMode.DRIVING,
+        };
+        directionsService.route(request, function (result, status) {
+          if (status == "OK") {
+            directionsRenderer.setDirections(result);
+          }
+        });
+      }
+      
+      function calcRoute() {
+        var start = document.getElementById("start").value;
+        var end = document.getElementById("end").value;
+        var request = {
+          origin: start,
+          destination: end,
+          travelMode: google.maps.TravelMode.DRIVING,
+        };
+        directionsService.route(request, function (result, status) {
+          if (status == "OK") {
+            directionsRenderer.setDirections(result);
+          }
+        });
+      }
+    </script>
+  </head>
+  <body onload="initMap()">
+    <div>
+      <label for="start">Start:</label>
+      <input type="text" id="start" name="start">
+      <label for="end">End:</label>
+      <input type="text" id="end" name="end">
+      <button onclick="calcRoute()">Get Directions</button>
+    </div>
+    <div id="map" style="height: 90vh"></div>
+  </body>
+</html>
